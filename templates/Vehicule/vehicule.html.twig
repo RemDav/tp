@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Nos véhicules</title>
+        <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+    </head>
+    <body>
+        {% for flashMessage in app.session.flashbag.get('error') %}
+            {{ flashMessage }}
+        {% endfor %}
+        <a href="{{ path('create_vehicule') }}">Ajouter un vehicule</a>
+        <h1>Toutes nos Modèles :</h1><br>
+        <table id="Tab" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Marque</th>
+                    <th>Model</th>
+                    <th>Couleur</th>
+                    <th>NB Assise</th>
+                    <th>Date de création</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+        </table>
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/datatables.min.js') }}"></script>
+        <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+        <script>
+            $(function() {
+                $('#Tab').DataTable({
+                    "language": {
+                        "url": "{{ asset('translate/fr.json') }}"
+                    },
+                    "processing": true,
+                    "ajax": {
+                        "url": "{{ path('request_vehicule') }}",
+                        "type": "post"
+                    },
+                    "sAjaxDataProp": "data",
+                    "pageLength": 10,
+                    "pagingType": "full_numbers",
+                    "columns":[
+                        {"data": "Type"},
+                        {"data": "Marque"},
+                        {"data": "Model"},
+                        {"data": "Color"},
+                        {"data": "Seat"},
+                        {"data": "Created"},
+                        { "data": "Update", "name": "Update",
+                            fnCreatedCell: function (nTd, sData, oData) {
+                                $(nTd).html("<a href="+oData.Update+">Modifier</a>");
+                            }
+                        },
+                        { "data": "Delete", "name": "Delete",
+                            fnCreatedCell: function (nTd, sData, oData) {
+                                $(nTd).html("<a href="+oData.Delete+">Supprimer</a>");
+                            }
+                        },
+                    ],
+                });
+            });
+        </script>
+    </body>
+</html>
